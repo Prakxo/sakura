@@ -1,0 +1,6 @@
+|LOADSPC 1,23|This is a test testoo test nyaa
+Look 
+my 
+newlines!!|END|
+|LOADSP 2,2,60||AUDIO 1|Nippaaaaaaaaaaaaaaaa|END|
+|ENDTXT|

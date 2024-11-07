@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "script.h": "c",
+        "main.h": "c"
+    },
+    "clangd.fallbackFlags": [
+        "-I${workspaceFolder}/include",
+        "-I${workspaceFolder}",
+    ]
+    
+}
