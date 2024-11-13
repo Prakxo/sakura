@@ -9,4 +9,9 @@ typedef enum scripts {
     SK_TEST_NUM,
 } Scripts;  
 
+typedef enum txts {
+    SK_TXT_TEST,
+    SK_TXT_MAX,
+} Txts;
+
 #endif

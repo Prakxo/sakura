@@ -1,5 +1,6 @@
 #include "command.h"
 #include <stdio.h>
+#include "txt.h"
 
 void Command_Process(u32 command){
 
@@ -25,8 +26,12 @@ void Command_Process(u32 command){
         char buf[8];
         u8 txtNo = command & 0xFF;
 
+        #ifdef DEBUG
         sprintf(buf, "TXT=%d", txtNo);
 
-        puts(buf);        
+        puts(buf);
+        #endif
+
+        Txt_Start(txtNo);
     }
 }

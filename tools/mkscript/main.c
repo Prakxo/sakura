@@ -18,6 +18,7 @@ typedef struct command_s {
 } Command;
 
 int last_command;
+int textbox_line_count = 0;
 
 unsigned char loadspc_sizes[] = {
     1,2,
@@ -38,6 +39,8 @@ Command commands[] = {
 };
 
 #define COMMAND_MAX 5
+#define COMMAND_MAX_LEN 30
+
 #define CONTROL_CHAR '\x7C'
 #define DELIM_CHAR '\x2C'
 #define SKIP_NEWLINE_CHAR '\x28'
@@ -216,7 +219,7 @@ char* process_script(const char* in, unsigned long* outsize){
 
 
         if(c == CONTROL_CHAR){
-            char* buf = calloc(0, 30);
+            char* buf = calloc(0, COMMAND_MAX_LEN);
             int end = 0;
             int it = 0;
             char* processed;
@@ -261,6 +264,13 @@ char* process_script(const char* in, unsigned long* outsize){
         else{   
             if(c != SKIP_NEWLINE_CHAR){
                 out[i++] = c;
+            }
+            if(c == '\n'){
+                textbox_line_count++;
+            }
+
+            if(last_command == END_VAL){
+                textbox_line_count = 0;
             }
             c = fgetc(f);
         }

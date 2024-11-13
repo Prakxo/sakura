@@ -1,5 +1,5 @@
-#ifndef COMMAND_H
-#define COMMAND_H
+#ifndef VN_COMMAND_H
+#define VN_COMMAND_H
 
 #include "__selftypes.h"
 

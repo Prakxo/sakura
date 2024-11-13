@@ -1,7 +1,13 @@
-#include "main.h"
+#include "example/include/main.h"
 #include "vnlib/VNLIB.h"
-#include "macros.h"
+#include "example/include/macros.h"
 #include <stdio.h> 
+
+u8 script1_txt[] = {
+    #include "example/data/script1_proc.txt.bin"
+};
+
+const u32 script1_txt_len = ARRAY_COUNTU(script1_txt);
 
 u32 SK_script_test0[] = {
     SK_COMMAND_START,
@@ -34,9 +40,31 @@ void debug_infoScript(u32* script, u32 size){
     #endif
 }
 
+void Add_TxtScripts(){
+    static u8* txtscript[] = {
+        script1_txt,
+    };
+    static u32 txtsizes[] = {
+        script1_txt_len,
+    };
+
+    int i;
+
+    for(i = 0; i < SK_TXT_MAX; i++){
+        Txt_Add(txtscript[i], txtsizes[i]);
+    }
+
+}
+
 int main(int argc, char** argv){
 
+    txt_num = SK_TXT_MAX;
+
+    Txt_Init();
+
     Script_Init(SK_TEST_NUM);
+
+    Add_TxtScripts();
 
     Script_Add(SK_script_test0, ARRAY_COUNT(SK_script_test0));
     Script_Add(SK_script_test1, ARRAY_COUNT(SK_script_test1));
