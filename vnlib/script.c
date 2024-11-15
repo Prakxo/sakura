@@ -1,9 +1,12 @@
 #include "command.h"
-#include "__macros.h"
-
-#include <stdlib.h>
 #include "script.h"
+
+#ifdef TARGET_PC
+#include <stdlib.h>
 #include <stdio.h>
+#endif
+
+#include "__macros.h"
 
 u32** scripts;
 u32 scriptAmount;
@@ -50,12 +53,14 @@ void Script_PrintComm(u32 scriptId){
     #endif
     
     for(i = 0; i < size; i++){
+        #ifdef TARGET_PC
         char buf[20];
 
         sprintf(buf, "Script %ld : %lx", scriptId, *script);
         puts(buf);
 
         script++;
+        #endif
     }
 
 }

@@ -1,7 +1,9 @@
 #include "example/include/main.h"
 #include "vnlib/VNLIB.h"
 #include "example/include/macros.h"
+#ifdef TARGET_PC
 #include <stdio.h> 
+#endif
 
 u8 script1_txt[] = {
     #include "example/data/script1_proc.txt.bin"
@@ -32,11 +34,13 @@ BOOL debug = FALSE;
 
 void debug_infoScript(u32* script, u32 size){
     #ifdef DEBUG
+    #ifdef TARGET_PC
     char buf[100];
     
     sprintf(buf, "script = %p\tsize=%ld", script, size);
 
     puts(buf);
+    #endif
     #endif
 }
 
@@ -57,6 +61,12 @@ void Add_TxtScripts(){
 }
 
 int main(int argc, char** argv){
+
+    #ifdef TARGET_PC
+    setbuf(stdout, NULL);
+    setbuf(stdin, NULL);
+    #endif
+
 
     txt_num = SK_TXT_MAX;
 

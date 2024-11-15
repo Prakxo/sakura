@@ -2,8 +2,10 @@
 #include "sprite.h"
 #include "audio.h"
 
-#include <stdio.h>
+#ifdef TARGET_PC
 #include <stdlib.h>
+#include <stdio.h>
+#endif
 
 #include "__macros.h"
 
@@ -15,6 +17,7 @@ typedef enum txt_play_status {
 } Txt_Play_Status;
 
 typedef enum txt_textbox_status {
+    TXT_TXTBOX_NONE,
     TXT_TXTBOX_WAIT,
     TXT_TXTBOX_CONTINUTE,
     TXT_TXTBOX_END,
@@ -47,7 +50,7 @@ u32 txt_num;
 u32 current_txt_script;
 u32 current_txt_script_len;
 
-u32 txt_txtbox_current_status;
+u32 txt_txtbox_current_status = TXT_TXTBOX_NONE;
 
 void Txt_Init() {
     txt_scripts = (Txt_Script*)malloc(txt_num * sizeof(Txt_Script));
@@ -187,14 +190,27 @@ int Txt_Play(u8* script) {
 
             status = Txt_ExecuteCommand(buf);
 
-            if(txt_txtbox_current_status == TXT_TXTBOX_WAIT){
-                
-            }
-
             i++;
         } else {
+            #ifdef TARGET_PC
             putchar(c);
+            #endif
             i++;
+        }
+
+        if(txt_txtbox_current_status == TXT_TXTBOX_WAIT){
+            char* ch = malloc(sizeof(char*));
+
+            #ifdef TARGET_PC
+            int num = 0;
+
+            while(num != 1){
+                num = fscanf(stdin, "%c", ch);
+            }
+
+            #endif
+            free(ch);
+            txt_txtbox_current_status = TXT_TXTBOX_NONE;
         }
     }
 

@@ -8,18 +8,26 @@ void Command_Process(u32 command){
         char buf[8];
         u8 bgNo = command & 0xFF;
 
+        #ifdef DEBUG
+        #ifdef TARGET_PC
         sprintf(buf, "BG=%d", bgNo);
 
         puts(buf);
+        #endif
+        #endif
     }
 
     if(command & SK_COMMAND_BGM){
         char buf[8];
         u8 bgmNo = command & 0xFF;
 
+        #ifdef DEBUG
+        #ifdef TARGET_PC
         sprintf(buf, "BGM=%d", bgmNo);
 
         puts(buf);
+        #endif
+        #endif
     }
 
     if(command & SK_COMMAND_TXT){
@@ -27,9 +35,11 @@ void Command_Process(u32 command){
         u8 txtNo = command & 0xFF;
 
         #ifdef DEBUG
+        #ifdef TARGET_PC
         sprintf(buf, "TXT=%d", txtNo);
 
         puts(buf);
+        #endif
         #endif
 
         Txt_Start(txtNo);

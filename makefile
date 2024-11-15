@@ -1,4 +1,5 @@
 OUTPUT := VN.elf
+TARGET_PC ?= 1
 
 DEBUG ?= 0
 
@@ -20,11 +21,15 @@ C_FILES += $(VNLIB_FILES)
 INCLUDE_CFLAGS = -I . -I example/include -I $(VNLIB)
 
 #school workaround lol
-CFLAGS := -O2 -std=c99
+CFLAGS := -std=c99
 #CFLAGS := -m32 -std=c99
 
 ifeq ($(DEBUG),1)
 CFLAGS += -DDEBUG -g
+endif
+
+ifeq ($(TARGET_PC), 1)
+CFLAGS += -DTARGET_PC
 endif
 
 CFLAGS += $(INCLUDE_CFLAGS)
@@ -34,7 +39,7 @@ default:
 
 strip:
 	$(shell strip VN.elf) 
-	
+
 clean:
 	$(RM) $(OUTPUT)
 	
