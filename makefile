@@ -19,7 +19,9 @@ C_FILES += $(VNLIB_FILES)
 
 INCLUDE_CFLAGS = -I . -I example/include -I $(VNLIB)
 
-CFLAGS := -m32 -std=c99
+#school workaround lol
+CFLAGS := -O2 -std=c99
+#CFLAGS := -m32 -std=c99
 
 ifeq ($(DEBUG),1)
 CFLAGS += -DDEBUG -g
@@ -30,6 +32,9 @@ CFLAGS += $(INCLUDE_CFLAGS)
 default:
 	$(CC) $(CFLAGS) $(C_FILES) -o $(OUTPUT)
 
+strip:
+	$(shell strip VN.elf) 
+	
 clean:
 	$(RM) $(OUTPUT)
 	

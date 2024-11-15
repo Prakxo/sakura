@@ -56,8 +56,10 @@ void Txt_Init() {
 }
 
 void Txt_Add(u8* script, u32 len) {
+    #ifdef DEBUG
     ASSERT(current_txt_script == txt_num);
-
+    #endif
+    
     txt_scripts[current_txt_script].txt_script = script;
     txt_scripts[current_txt_script].len = len;
 
@@ -202,7 +204,9 @@ int Txt_Play(u8* script) {
 void Txt_Start(u8 txtId) {
     u8* script;
 
+    #ifdef DEBUG
     ASSERT(txtId > txt_num);
+    #endif
 
     script = txt_scripts[txtId].txt_script;
     current_txt_script_len = txt_scripts[txtId].len;

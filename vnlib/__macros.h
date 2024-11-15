@@ -11,9 +11,9 @@
     (                                               \
                                                     \
         {                                           \
-            char buf[50];                           \
+            char buf[100];                           \
             if ((expr) == TRUE) {                   \
-                sprintf(buf, "%s failed!", #expr); \
+                sprintf(buf, "%s failed! in %s @ %s-%d\n", #expr, __PRETTY_FUNCTION__, __FILE__, __LINE__); \
                 puts(buf);                          \
             }                                       \
         })

@@ -38,15 +38,17 @@ void Script_Start(u32 scriptId){
 }
 
 void Script_PrintComm(u32 scriptId){
-
+    #ifdef DEBUG
     ASSERT(scriptId > scriptAmount);
+    #endif
 
     u32 size = scriptCommandsSizes[scriptId];
     u32* script = scripts[scriptId];
     s32 i;
-
+    #ifdef DEBUG
     ASSERT(script == NULL);
-
+    #endif
+    
     for(i = 0; i < size; i++){
         char buf[20];
 
