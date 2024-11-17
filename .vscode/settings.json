@@ -4,7 +4,8 @@
         "main.h": "c"
     },
     "clangd.fallbackFlags": [
-        "-I${workspaceFolder}/include",
+        "-I${workspaceFolder}/example/include",
+        "-DTARGET_PC",
         "-I${workspaceFolder}",
     ]
     

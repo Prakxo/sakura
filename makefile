@@ -1,5 +1,6 @@
 OUTPUT := VN.elf
 TARGET_PC ?= 1
+NO64BIT ?= 1
 
 DEBUG ?= 0
 
@@ -20,16 +21,20 @@ C_FILES += $(VNLIB_FILES)
 
 INCLUDE_CFLAGS = -I . -I example/include -I $(VNLIB)
 
-#school workaround lol
-CFLAGS := -std=c99
-#CFLAGS := -m32 -std=c99
+CFLAGS:= -std=c99 
+
+ifeq ($(NO64BIT), 1)
+CFLAGS += -m32
+endif
 
 ifeq ($(DEBUG),1)
 CFLAGS += -DDEBUG -g
+else
+CFLAGS += -O
 endif
 
 ifeq ($(TARGET_PC), 1)
-CFLAGS += -DTARGET_PC
+CFLAGS += -DTARGET_PC -D_XOPEN_SOURCE=600
 endif
 
 CFLAGS += $(INCLUDE_CFLAGS)

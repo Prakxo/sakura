@@ -5,6 +5,9 @@
 #ifdef TARGET_PC
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <strings.h>
+#include <termios.h>
 #endif
 
 #include "__macros.h"
@@ -44,25 +47,40 @@ typedef struct txt_command_arg_s {
     u8 argc;
 } Txt_Command_Arg;
 
+#define TXT_TXTBOX_MAX_LINE 4
+
+#define TXT_TXTBOX_MAXCHAR_LINE 40
+
+#define TXT_TXTBOX_BUFFER TXT_TXTBOX_MAX_LINE * TXT_TXTBOX_MAXCHAR_LINE
+
+typedef struct txt_txtbox_current_s {
+    char data[TXT_TXTBOX_BUFFER];
+    u32 current_line;
+    u32 txtbox_id;
+    BOOL exists;
+}Txt_TxtBox;
+
+Txt_TxtBox txt_txtbox_current; 
+
 Txt_Script* txt_scripts;
-int txt_initialised = FALSE;
+BOOL txt_initialised = FALSE;
 u32 txt_num;
 u32 current_txt_script;
 u32 current_txt_script_len;
+u32 current_txt_script_txtbox_ctr;
 
-u32 txt_txtbox_current_status = TXT_TXTBOX_NONE;
+Txt_TxtBox_Status txt_txtbox_current_status = TXT_TXTBOX_NONE;
 
 void Txt_Init() {
     txt_scripts = (Txt_Script*)malloc(txt_num * sizeof(Txt_Script));
     current_txt_script = 0;
     current_txt_script_len = 0;
+    current_txt_script_txtbox_ctr = 0; // Invalid txtbox_id
 }
 
 void Txt_Add(u8* script, u32 len) {
-    #ifdef DEBUG
     ASSERT(current_txt_script == txt_num);
-    #endif
-    
+
     txt_scripts[current_txt_script].txt_script = script;
     txt_scripts[current_txt_script].len = len;
 
@@ -170,8 +188,100 @@ int Txt_ExecuteCommand(char* buf) {
     return TXT_STATUS_PLAY;
 }
 
+static struct termios inline Txt_BlockUserInput(){
+    struct termios pre;
+    struct termios new;
+    int ret = tcgetattr(STDIN_FILENO, &pre);
+
+    ASSERT(ret == -1);
+
+    new = pre;
+
+    // disable echoing user input get fetching
+    new.c_lflag &= ~ECHO;
+
+    ret = tcsetattr(STDIN_FILENO, TCSAFLUSH, &new);
+
+    ASSERT(ret == -1);
+
+    return pre;
+}
+
+static void inline Txt_ReleaseUserInput(struct termios* t){
+    tcsetattr(STDIN_FILENO, TCSAFLUSH, t);
+
+}
+
+void Txt_txtbox_wait_Input() {
+    char* ch = malloc(sizeof(char*));
+
+#ifdef TARGET_PC
+    int num = 0;
+    struct termios t = Txt_BlockUserInput();
+    
+    while (num != 1 && *ch != '\n') {
+        num = fscanf(stdin, "%c", ch);
+        putchar('\n');
+    }
+
+    Txt_ReleaseUserInput(&t);
+
+#endif
+    free(ch);
+}
+
+Txt_TxtBox* Txt_GetCurrentTxtBox(){
+    return &txt_txtbox_current;
+}
+
+void Txt_txtbox_init(){
+    bzero(txt_txtbox_current.data, TXT_TXTBOX_BUFFER);
+    txt_txtbox_current.current_line = 0;
+    txt_txtbox_current.exists = TRUE;
+    txt_txtbox_current.txtbox_id = current_txt_script_txtbox_ctr++;
+}
+
+void Txt_txtbox_clear(){
+    bzero(txt_txtbox_current.data, TXT_TXTBOX_BUFFER);
+    txt_txtbox_current.exists = FALSE;
+}
+
+void Txt_txtbox_write_data(char c, int pos){
+    if(Txt_GetCurrentTxtBox()->exists == FALSE){
+        Txt_txtbox_init();
+    }
+
+    if(c == '\n'){
+        txt_txtbox_current.current_line++;
+    }
+
+    ASSERT(txt_txtbox_current.current_line == TXT_TXTBOX_MAX_LINE && c == '\n');
+
+    txt_txtbox_current.data[pos] = c;
+}
+
+void Txt_txtbox_display(){
+    int i = 0;
+    char c = txt_txtbox_current.data[i];
+
+    #ifdef DEBUG
+    printf("textbox id : %ld\n", Txt_GetCurrentTxtBox()->txtbox_id);
+    #endif
+
+    for(;c != '\0'; i++){
+        c = txt_txtbox_current.data[i];
+        #ifdef TARGET_PC
+        putchar(c);
+        usleep(50000);
+        #endif
+        
+    }
+}
+
+
 int Txt_Play(u8* script) {
     int i = 0;
+    int txtbox_pos = 0;
     int status;
 
     while (i <= current_txt_script_len) {
@@ -192,25 +302,25 @@ int Txt_Play(u8* script) {
 
             i++;
         } else {
-            #ifdef TARGET_PC
-            putchar(c);
-            #endif
+            Txt_txtbox_write_data(c, txtbox_pos);
             i++;
+            txtbox_pos++;
         }
 
-        if(txt_txtbox_current_status == TXT_TXTBOX_WAIT){
-            char* ch = malloc(sizeof(char*));
+        if (txt_txtbox_current_status == TXT_TXTBOX_WAIT) {
+#ifdef TARGET_PC
+            struct termios t = Txt_BlockUserInput();
+#endif
+            Txt_txtbox_display();
+#ifdef TARGET_PC
+            Txt_ReleaseUserInput(&t);
+#endif
 
-            #ifdef TARGET_PC
-            int num = 0;
+            Txt_txtbox_wait_Input();
 
-            while(num != 1){
-                num = fscanf(stdin, "%c", ch);
-            }
-
-            #endif
-            free(ch);
             txt_txtbox_current_status = TXT_TXTBOX_NONE;
+            txtbox_pos = 0;
+            Txt_txtbox_clear();
         }
     }
 
@@ -220,9 +330,7 @@ int Txt_Play(u8* script) {
 void Txt_Start(u8 txtId) {
     u8* script;
 
-    #ifdef DEBUG
     ASSERT(txtId > txt_num);
-    #endif
 
     script = txt_scripts[txtId].txt_script;
     current_txt_script_len = txt_scripts[txtId].len;
