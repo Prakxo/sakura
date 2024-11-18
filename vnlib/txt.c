@@ -60,7 +60,8 @@ typedef struct txt_txtbox_current_s {
     BOOL exists;
 }Txt_TxtBox;
 
-Txt_TxtBox txt_txtbox_current; 
+Txt_TxtBox txt_txtbox_current= {{0}, 0,0,FALSE};
+Txt_TxtBox txt_txtbox_old = {{0}, 0,0,FALSE};
 
 Txt_Script* txt_scripts;
 BOOL txt_initialised = FALSE;
@@ -213,9 +214,8 @@ static void inline Txt_ReleaseUserInput(struct termios* t){
 }
 
 void Txt_txtbox_wait_Input() {
-    char* ch = malloc(sizeof(char*));
-
 #ifdef TARGET_PC
+    char* ch = malloc(sizeof(char*));
     int num = 0;
     struct termios t = Txt_BlockUserInput();
     
@@ -225,9 +225,8 @@ void Txt_txtbox_wait_Input() {
     }
 
     Txt_ReleaseUserInput(&t);
-
-#endif
     free(ch);
+#endif
 }
 
 Txt_TxtBox* Txt_GetCurrentTxtBox(){
@@ -242,6 +241,7 @@ void Txt_txtbox_init(){
 }
 
 void Txt_txtbox_clear(){
+    txt_txtbox_old = txt_txtbox_current;
     bzero(txt_txtbox_current.data, TXT_TXTBOX_BUFFER);
     txt_txtbox_current.exists = FALSE;
 }
@@ -281,7 +281,7 @@ void Txt_txtbox_display(){
 
 int Txt_Play(u8* script) {
     int i = 0;
-    int txtbox_pos = 0;
+    int txtboxPos = 0;
     int status;
 
     while (i <= current_txt_script_len) {
@@ -302,9 +302,9 @@ int Txt_Play(u8* script) {
 
             i++;
         } else {
-            Txt_txtbox_write_data(c, txtbox_pos);
+            Txt_txtbox_write_data(c, txtboxPos);
             i++;
-            txtbox_pos++;
+            txtboxPos++;
         }
 
         if (txt_txtbox_current_status == TXT_TXTBOX_WAIT) {
@@ -319,7 +319,7 @@ int Txt_Play(u8* script) {
             Txt_txtbox_wait_Input();
 
             txt_txtbox_current_status = TXT_TXTBOX_NONE;
-            txtbox_pos = 0;
+            txtboxPos = 0;
             Txt_txtbox_clear();
         }
     }
