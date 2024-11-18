@@ -1,2 +1,5 @@
 VN.elf
 tools/mkscript/mkscript
+
+lib/*.o
+lib/*.a

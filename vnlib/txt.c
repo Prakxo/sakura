@@ -49,7 +49,7 @@ typedef struct txt_command_arg_s {
 
 #define TXT_TXTBOX_MAX_LINE 4
 
-#define TXT_TXTBOX_MAXCHAR_LINE 40
+#define TXT_TXTBOX_MAXCHAR_LINE 60
 
 #define TXT_TXTBOX_BUFFER TXT_TXTBOX_MAX_LINE * TXT_TXTBOX_MAXCHAR_LINE
 
@@ -210,7 +210,6 @@ static struct termios inline Txt_BlockUserInput(){
 
 static void inline Txt_ReleaseUserInput(struct termios* t){
     tcsetattr(STDIN_FILENO, TCSAFLUSH, t);
-
 }
 
 void Txt_txtbox_wait_Input() {
@@ -237,7 +236,7 @@ void Txt_txtbox_init(){
     bzero(txt_txtbox_current.data, TXT_TXTBOX_BUFFER);
     txt_txtbox_current.current_line = 0;
     txt_txtbox_current.exists = TRUE;
-    txt_txtbox_current.txtbox_id = current_txt_script_txtbox_ctr++;
+    txt_txtbox_current.txtbox_id = ++current_txt_script_txtbox_ctr;
 }
 
 void Txt_txtbox_clear(){
