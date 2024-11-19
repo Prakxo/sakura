@@ -4,5 +4,6 @@
 #include "script.h"
 #include "command.h"
 #include "txt.h"
+#include "data.h"
 
 #endif

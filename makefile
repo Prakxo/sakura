@@ -1,4 +1,6 @@
-OUTPUT := VN.elf
+NAME := VN
+OUTPUT := $(NAME).elf
+BUILD_DIR := build/
 TARGET_PC ?= 1
 NO64BIT ?= 1
 
@@ -6,6 +8,7 @@ DEBUG ?= 0
 
 BINUTILS_PREFIX := 
 CC := $(BINUTILS_PREFIX)gcc
+LD := $(BINUTILS_PREFIX)ld
 AR := $(BINUTILS_PREFIX)gcc-ar
 
 
@@ -18,6 +21,8 @@ VNLIB_FILES := $(foreach dir,$(VNLIB),$(wildcard $(dir)/*.c))
 C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c))
 
 C_FILES += $(VNLIB_FILES)
+
+O_FILES := $(C_FILES:.c=.o)
 
 
 INCLUDE_CFLAGS = -I . -I example/include -I $(VNLIB)
@@ -40,10 +45,19 @@ endif
 
 CFLAGS += $(INCLUDE_CFLAGS)
 
+LDFLAGS := -Map $(NAME).map
+
+
+#default:
+#	$(CC) -c $(CFLAGS) $(C_FILES) -Llib -l:miniaudio.a -lm -ldl -lpthread
+#	$(LD) $(LDFLAGS) -o $(OUTPUT) $(BUILD_DIR)$(O_FILES) 
 
 
 default:
 	$(CC) $(CFLAGS) $(C_FILES) -o $(OUTPUT) -Llib -l:miniaudio.a -lm -ldl -lpthread
+
+dirs:
+	mkdir -p
 
 libs:
 	$(CC) -c lib/miniaudio.c -o lib/miniaudio.o
