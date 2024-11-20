@@ -1,6 +1,7 @@
 #include "command.h"
 #include <stdio.h>
 #include "txt.h"
+#include "audio.h"
 
 void Command_Process(u32 command){
 
@@ -18,8 +19,8 @@ void Command_Process(u32 command){
     }
 
     if(command & SK_COMMAND_BGM){
-        char buf[8];
-        u8 bgmNo = command & 0xFF;
+        char buf[10];
+        u16 bgmNo = command & 0xFFFF;
 
         #ifdef DEBUG
         #ifdef TARGET_PC
@@ -28,6 +29,8 @@ void Command_Process(u32 command){
         puts(buf);
         #endif
         #endif
+
+        Audio_LoadAudio(AUDIO_TYPE_BGM, bgmNo);
     }
 
     if(command & SK_COMMAND_TXT){

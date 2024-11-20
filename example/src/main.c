@@ -70,6 +70,7 @@ int main(int argc, char** argv){
 
     txt_num = SK_TXT_MAX;
 
+    Audio_Init();
     Txt_Init();
 
     Script_Init(SK_TEST_NUM);
