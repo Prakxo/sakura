@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define ARRAY_COUNT(arr) (long)(sizeof(arr) / sizeof(arr[0]))
+#define ARRAY_COUNTU(arr) (unsigned long)(sizeof(arr) / sizeof(arr[0]))
+
 typedef enum CommandValues {
     LOADSPC_VAL = 0x21,
     LOADSP_VAL = 0x22,
@@ -28,12 +31,12 @@ unsigned char loadsp_sizes[] = {
     1,2, 1,
 };
 unsigned char audio_sizes[] = {
-    2,
+    1,2,
 };
 Command commands[] = {
-    {"LOADSPC", 2, loadspc_sizes , LOADSPC_VAL},
-    {"LOADSP", 3, loadsp_sizes, LOADSP_VAL},
-    {"AUDIO", 1, audio_sizes, AUDIO_VAL},
+    {"LOADSPC", ARRAY_COUNTU(loadspc_sizes), loadspc_sizes , LOADSPC_VAL},
+    {"LOADSP", ARRAY_COUNTU(loadsp_sizes), loadsp_sizes, LOADSP_VAL},
+    {"AUDIO", ARRAY_COUNTU(audio_sizes), audio_sizes, AUDIO_VAL},
     {"END", 0, NULL, END_VAL},
     {"ENDTXT", 0, NULL, ENDTXT_VAL},
 };

@@ -3,6 +3,6 @@
 
 #include "audio.h"
 
-void Audio_LoadAudio(u16 audioId){
+void Audio_LoadAudio(u8 type, u16 audioId){
     
 }

@@ -11,7 +11,7 @@
 // Admits 3 arguments (spriteID, x, fadeRate)
 #define LOADSP_TXT_COMMAND 0x22
 
-// Admits 1 argument (audioID)
+// Admits 1 argument (type, audioID)
 #define AUDIO_TXT_COMMAND 0x23
 
 // No arguments

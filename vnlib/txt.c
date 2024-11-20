@@ -97,21 +97,21 @@ static inline void Txt_ReadUnsignedShort(char* buf, int pos, u16* value) {
     }
 }
 
-static inline void Txt_ExecuteLOADSPCommon(char* buf, u8* id, u16* x) {
+static inline void Txt_ExecuteCommon(char* buf, u8* arg1, u16* arg2) {
     int i = 1;
 
-    *id = buf[i++];
+    *arg1 = buf[i++];
 
 #ifdef DEBUG
-    printf("sprite ID : %d\n", *id);
+    printf("arg1 : %d\n", *arg1);
 #endif
 
     i++; // skip delim
 
-    Txt_ReadUnsignedShort(buf, i, x);
+    Txt_ReadUnsignedShort(buf, i, arg2);
 
 #ifdef DEBUG
-    printf("x : %d\n", *x);
+    printf("arg2 : %d\n", *arg2);
 #endif
 }
 
@@ -129,7 +129,7 @@ int Txt_ExecuteCommand(char* buf) {
             u8 id;
             u16 x;
 
-            Txt_ExecuteLOADSPCommon(buf, &id, &x);
+            Txt_ExecuteCommon(buf, &id, &x);
 
             Sprite_LoadSpriteContinuous(id, x);
 
@@ -143,7 +143,7 @@ int Txt_ExecuteCommand(char* buf) {
             u8 fadeRate;
             int i = 1;
 
-            Txt_ExecuteLOADSPCommon(buf, &id, &x);
+            Txt_ExecuteCommon(buf, &id, &x);
 
             // offs = value (1 char) + comma count (argc-1) + type sizes
             fadeRate = buf[i + LOADSP_ARGC - 1 + sizeof(u8) + sizeof(u16)];
@@ -156,20 +156,16 @@ int Txt_ExecuteCommand(char* buf) {
 
         } break;
         case AUDIO_TXT_COMMAND: {
-            int i = 1;
             u16 audioId;
+            u8 type;
 
 #ifdef DEBUG
             puts("AUDIO Command!");
 #endif
 
-            Txt_ReadUnsignedShort(buf, i, &audioId);
+            Txt_ExecuteCommon(buf, &type, &audioId);
 
-#ifdef DEBUG
-            printf("audioId : %d\n", audioId);
-#endif
-
-            Audio_LoadAudio(audioId);
+            Audio_LoadAudio(type, audioId);
 
         } break;
         case END_TXT_COMMAND:
