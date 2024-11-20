@@ -6,10 +6,11 @@
 typedef struct dma_data_s{
     u8* ptr;
     u32 len;
+    u8 compressed;
 }Dmadata;
 
-#define ENTRY_DMA(name) \
-    (#name)_data, (#name)_len, \
+#define ENTRY_DMA(name, len, compressed) \
+    {name, len, compressed}\
 
 
 extern Dmadata dmadata[];
