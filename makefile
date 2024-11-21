@@ -24,6 +24,8 @@ C_FILES += $(VNLIB_FILES)
 
 O_FILES := $(C_FILES:.c=.o)
 
+LIBS_FLAGS :=
+
 
 INCLUDE_CFLAGS = -I . -I example/include -I $(VNLIB)
 
@@ -34,6 +36,7 @@ CFLAGS += -m32
 endif
 
 ifeq ($(DEBUG),1)
+LIBS_FLAGS += -g
 CFLAGS += -DDEBUG -g
 else
 CFLAGS += -O
@@ -60,7 +63,7 @@ dirs:
 	mkdir -p
 
 libs:
-	$(CC) -c lib/miniaudio.c -o lib/miniaudio.o
+	$(CC) $(LIBS_FLAGS) -c lib/miniaudio.c -o lib/miniaudio.o
 	$(AR) cr lib/miniaudio.a ./lib/miniaudio.o
 	
 strip:

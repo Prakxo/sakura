@@ -15,4 +15,6 @@ typedef struct dma_data_s{
 
 extern Dmadata dmadata[];
 
+extern void Data_DMAGetRes(void** ptr, u8 resourceId);
+
 #endif

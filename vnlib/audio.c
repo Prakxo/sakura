@@ -2,16 +2,19 @@
 #include "lib/miniaudio.h"
 
 #ifdef TARGET_PC
+#include <stdio.h>
 #include <stdlib.h>
+#include <strings.h>
 #endif
 
-#include "__macros.h"
 #include "audio.h"
+#include "data.h"
+#include "__macros.h"
 
 #define VN_AUDIO_SAMPLE_RATE 44100
 #define VN_AUDIO_CHANNEL_COUNT 4
 
-#define VN_AUDIO_BGM_BUF 4092
+#define VN_AUDIO_BGM_BUF 4096
 #define VN_AUDIO_SFX_BUF 1024
 #define VN_AUDIO_VOICE_BUF 2048
 
@@ -23,7 +26,7 @@ typedef struct audio_heap_s {
     u8 audio_voice_buf[VN_AUDIO_VOICE_BUF];
 } Audio_Heap;
 
-Audio_Heap* heap;
+Audio_Heap heap;
 ma_decoder_config decoder_conf;
 ma_device_config device_conf;
 ma_decoder* decoders;
@@ -65,13 +68,16 @@ void Audio_Init_Device() {
 }
 
 void Audio_Init() {
-    heap = calloc(0, sizeof(Audio_Heap));
-    decoders = calloc(0, sizeof(ma_decoder) * AUDIO_TYPE_NUM);
-    decoder_conf = ma_decoder_config_init(ma_format_f32, VN_AUDIO_CHANNEL_COUNT, VN_AUDIO_SAMPLE_RATE);
+    bzero(&heap, sizeof(Audio_Heap));
+    decoders = malloc(sizeof(ma_decoder) * AUDIO_TYPE_NUM);
 
-    //Audio_Load_Buf(heap->audio_bgm_buf, VN_AUDIO_BGM_BUF, AUDIO_TYPE_BGM);
-    //Audio_Load_Buf(heap->audio_sfx_buf, VN_AUDIO_SFX_BUF, AUDIO_TYPE_SFX);
-    //Audio_Load_Buf(heap->audio_voice_buf, VN_AUDIO_VOICE_BUF, AUDIO_TYPE_VOICE);
+    decoder_conf = ma_decoder_config_init(ma_format_f32, VN_AUDIO_CHANNEL_COUNT, VN_AUDIO_SAMPLE_RATE);
+}
+
+static inline void Audio_FillDecoder(){
+    Audio_Load_Buf(heap.audio_bgm_buf, VN_AUDIO_BGM_BUF, AUDIO_TYPE_BGM);
+    Audio_Load_Buf(heap.audio_sfx_buf, VN_AUDIO_SFX_BUF, AUDIO_TYPE_SFX);
+    Audio_Load_Buf(heap.audio_voice_buf, VN_AUDIO_VOICE_BUF, AUDIO_TYPE_VOICE);
 }
 
 void Audio_Play() {
@@ -88,4 +94,38 @@ void Audio_Play() {
 }
 
 void Audio_LoadAudio(u8 type, u16 audioId) {
+    u8* data;
+    u8* buf;
+    int i = 0;
+
+    Data_DMAGetRes((void**)&data, audioId);
+
+    switch(type){
+        case AUDIO_TYPE_BGM:
+            buf = heap.audio_bgm_buf; 
+            break;
+        case AUDIO_TYPE_SFX:
+            buf = heap.audio_sfx_buf; 
+            break;
+        case AUDIO_TYPE_VOICE:
+            buf = heap.audio_voice_buf; 
+            break;
+        
+        default:
+            buf = NULL;
+            break;
+    }
+
+    if(data != NULL && buf != NULL){
+        while(*data != '\0'){
+            buf[i++] = *data++;
+        }
+    }
+    else{
+        #ifdef TARGET_PC
+
+        puts("DMA DATA is NULL");
+
+        #endif
+    }
 }
