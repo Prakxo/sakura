@@ -2,5 +2,5 @@
 Look 
 my 
 newlines!!|END|
-|LOADSP 2,2,60||AUDIO 2,1|Nippaaaaaaaaaaaaaaaa|END|
+|LOADSP 2,2,60||AUDIO 4,1|Nippaaaaaaaaaaaaaaaa|END|
 |ENDTXT|

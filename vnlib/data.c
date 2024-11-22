@@ -9,8 +9,12 @@
 extern u32 Data_DecompressData(void** dst, void* src, u32 preSize);
 
 
-void Data_DMAGetRes(void** ptr, u8 resourceId){
+void Data_DMAGetRes(void** ptr, u32* size, u16 resourceId){
     Dmadata* data = &dmadata[resourceId];
+
+    if(size != NULL){
+        *size = data->len;
+    }
 
     if(data->compressed == TRUE){
         void* out;

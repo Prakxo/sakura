@@ -1,6 +1,7 @@
 #include "txt.h"
 #include "sprite.h"
 #include "audio.h"
+#include "vnlib/data.h"
 
 #ifdef TARGET_PC
 #include <stdlib.h>
@@ -64,8 +65,6 @@ Txt_TxtBox txt_txtbox_current= {{0}, 0,0,FALSE};
 Txt_TxtBox txt_txtbox_old = {{0}, 0,0,FALSE};
 
 Txt_Script* txt_scripts;
-BOOL txt_initialised = FALSE;
-u32 txt_num;
 u32 current_txt_script;
 u32 current_txt_script_len;
 u32 current_txt_script_txtbox_ctr;
@@ -73,19 +72,21 @@ u32 current_txt_script_txtbox_ctr;
 Txt_TxtBox_Status txt_txtbox_current_status = TXT_TXTBOX_NONE;
 
 void Txt_Init() {
-    txt_scripts = (Txt_Script*)malloc(txt_num * sizeof(Txt_Script));
-    current_txt_script = 0;
+    txt_scripts = (Txt_Script*)malloc(sizeof(Txt_Script));
     current_txt_script_len = 0;
     current_txt_script_txtbox_ctr = 0; // Invalid txtbox_id
 }
 
-void Txt_Add(u8* script, u32 len) {
-    ASSERT(current_txt_script == txt_num);
+void Txt_Add(u16 resourceId) {
+    u8* script;
+    u32 size;
 
-    txt_scripts[current_txt_script].txt_script = script;
-    txt_scripts[current_txt_script].len = len;
+    Data_DMAGetRes((void**)&script, &size, resourceId);
 
-    current_txt_script++;
+    txt_scripts->txt_script = script;
+    txt_scripts->len = size;
+
+    current_txt_script = resourceId;
 }
 
 static inline void Txt_ReadUnsignedShort(char* buf, int pos, u16* value) {
@@ -322,13 +323,11 @@ int Txt_Play(u8* script) {
     return TXT_STATUS_END;
 }
 
-void Txt_Start(u8 txtId) {
+void Txt_Start() {
     u8* script;
 
-    ASSERT(txtId > txt_num);
-
-    script = txt_scripts[txtId].txt_script;
-    current_txt_script_len = txt_scripts[txtId].len;
+    script = txt_scripts->txt_script;
+    current_txt_script_len = txt_scripts->len;
 
     while (Txt_Play(script) != TXT_STATUS_END)
         ;

@@ -3,15 +3,11 @@
 
 #include "selftypes.h"
 
-typedef enum scripts {
-    SK_TEST_0,
-    SK_TEST_1,
-    SK_TEST_NUM,
-} Scripts;  
-
-typedef enum txts {
-    SK_TXT_TEST,
-    SK_TXT_MAX,
-} Txts;
+typedef enum Resource_DMA {
+    TXT_SCRIPT_TEST,
+    TEST_SCRIPT_0,
+    TEST_SCRIPT_1,
+    RESOURCE_DMA_NUM,
+} Resource_DMA;
 
 #endif

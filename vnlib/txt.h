@@ -25,7 +25,7 @@
 extern u32 txt_num;
 
 extern void Txt_Init();
-extern void Txt_Add(u8* txtScriptPtr, u32 len);
-extern void Txt_Start(u8 txtId);
+extern void Txt_Add(u16 resourceId);
+extern void Txt_Start();
 
 #endif

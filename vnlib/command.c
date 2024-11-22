@@ -37,6 +37,9 @@ void Command_Process(u32 command){
         char buf[8];
         u8 txtNo = command & 0xFF;
 
+        Txt_Add(txtNo);
+
+
         #ifdef DEBUG
         #ifdef TARGET_PC
         sprintf(buf, "TXT=%d", txtNo);
@@ -45,6 +48,6 @@ void Command_Process(u32 command){
         #endif
         #endif
 
-        Txt_Start(txtNo);
+        Txt_Start();
     }
 }
