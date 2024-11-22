@@ -74,12 +74,6 @@ void Audio_Init() {
     decoder_conf = ma_decoder_config_init(ma_format_f32, VN_AUDIO_CHANNEL_COUNT, VN_AUDIO_SAMPLE_RATE);
 }
 
-static inline void Audio_FillDecoder(){
-    Audio_Load_Buf(heap.audio_bgm_buf, VN_AUDIO_BGM_BUF, AUDIO_TYPE_BGM);
-    Audio_Load_Buf(heap.audio_sfx_buf, VN_AUDIO_SFX_BUF, AUDIO_TYPE_SFX);
-    Audio_Load_Buf(heap.audio_voice_buf, VN_AUDIO_VOICE_BUF, AUDIO_TYPE_VOICE);
-}
-
 void Audio_Play() {
     int i;
     ma_result res;
@@ -96,6 +90,7 @@ void Audio_Play() {
 void Audio_LoadAudio(u8 type, u16 audioId) {
     u8* data;
     u8* buf;
+    u32 size;
     int i = 0;
 
     Data_DMAGetRes((void**)&data, audioId);
@@ -103,16 +98,20 @@ void Audio_LoadAudio(u8 type, u16 audioId) {
     switch(type){
         case AUDIO_TYPE_BGM:
             buf = heap.audio_bgm_buf; 
+            size = VN_AUDIO_BGM_BUF;
             break;
         case AUDIO_TYPE_SFX:
             buf = heap.audio_sfx_buf; 
+            size = VN_AUDIO_SFX_BUF;
             break;
         case AUDIO_TYPE_VOICE:
             buf = heap.audio_voice_buf; 
+            size = VN_AUDIO_VOICE_BUF;
             break;
         
         default:
             buf = NULL;
+            size = 0;
             break;
     }
 
@@ -120,12 +119,14 @@ void Audio_LoadAudio(u8 type, u16 audioId) {
         while(*data != '\0'){
             buf[i++] = *data++;
         }
+        Audio_Load_Buf(buf, size, type);
     }
     else{
         #ifdef TARGET_PC
-
-        puts("DMA DATA is NULL");
-
+        #ifdef DEBUG
+        puts("DMA DATA is NULL\tNot Loading!!");
+        #endif
         #endif
     }
+
 }
