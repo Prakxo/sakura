@@ -12,7 +12,6 @@ typedef struct dma_data_s{
 #define ENTRY_DMA(name, len, compressed) \
     {name, len, compressed}\
 
-
 extern Dmadata dmadata[];
 
 extern void Data_DMAGetRes(void** ptr, u32* size, u16 resourceId);

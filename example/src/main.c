@@ -1,7 +1,6 @@
 #include "example/include/main.h"
-#include "vnlib/VNLIB.h"
 #include "example/include/macros.h"
-#include "vnlib/txt.h"
+#include "vnlib/VNLIB.h"
 #ifdef TARGET_PC
 #include <stdio.h> 
 #endif

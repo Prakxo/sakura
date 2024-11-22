@@ -11,6 +11,6 @@ typedef enum audio_type {
 } Audio_Type;
 
 extern void Audio_Init();
-extern void Audio_LoadAudio(u8 type, u16 audioId);
+extern void Audio_LoadAudio(u8 type, u16 resourceId);
 
 #endif

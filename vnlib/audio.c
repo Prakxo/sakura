@@ -9,7 +9,6 @@
 
 #include "audio.h"
 #include "data.h"
-#include "__macros.h"
 
 #define VN_AUDIO_SAMPLE_RATE 44100
 #define VN_AUDIO_CHANNEL_COUNT 4
@@ -87,13 +86,13 @@ void Audio_Play() {
     ma_event_wait(&stop_event);
 }
 
-void Audio_LoadAudio(u8 type, u16 audioId) {
+void Audio_LoadAudio(u8 type, u16 resourceId) {
     u8* data;
     u8* buf;
     u32 size;
     int i = 0;
 
-    Data_DMAGetRes((void**)&data, NULL, audioId);
+    Data_DMAGetRes((void**)&data, NULL, resourceId);
 
     switch(type){
         case AUDIO_TYPE_BGM:

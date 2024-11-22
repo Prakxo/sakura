@@ -1,5 +1,11 @@
 #include "command.h"
+
+#ifdef TARGET_PC
+#ifdef DEBUG
 #include <stdio.h>
+#endif
+#endif
+
 #include "txt.h"
 #include "audio.h"
 

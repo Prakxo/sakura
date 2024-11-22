@@ -5,13 +5,13 @@
 
 #define CONTROL_CHAR_TXT_COMMAND '\x7C'
 
-// Admits 2 arguments (spriteID, x)
+// Admits 2 arguments (resourceID, x)
 #define LOADSPC_TXT_COMMAND 0x21
 
-// Admits 3 arguments (spriteID, x, fadeRate)
+// Admits 3 arguments (resourceID, x, fadeRate)
 #define LOADSP_TXT_COMMAND 0x22
 
-// Admits 1 argument (type, audioID)
+// Admits 1 argument (type, resourceID)
 #define AUDIO_TXT_COMMAND 0x23
 
 // No arguments

@@ -7,8 +7,6 @@
 #include <stdio.h>
 #endif
 
-#include "__macros.h"
-
 u32* currentScript;
 
 void Script_Init(){

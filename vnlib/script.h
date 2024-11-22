@@ -7,5 +7,4 @@ extern void Script_Init();
 extern void Script_Add(u16 resourceId);
 extern void Script_Start();
 
-
 #endif

@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #endif
 
-#include "__macros.h"
-
 extern u32 Data_DecompressData(void** dst, void* src, u32 preSize);
 
 

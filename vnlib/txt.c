@@ -64,15 +64,15 @@ typedef struct txt_txtbox_current_s {
 Txt_TxtBox txt_txtbox_current= {{0}, 0,0,FALSE};
 Txt_TxtBox txt_txtbox_old = {{0}, 0,0,FALSE};
 
-Txt_Script* txt_scripts;
-u32 current_txt_script;
+Txt_Script* txt_script;
+u32 current_txt_script_id;
 u32 current_txt_script_len;
 u32 current_txt_script_txtbox_ctr;
 
 Txt_TxtBox_Status txt_txtbox_current_status = TXT_TXTBOX_NONE;
 
 void Txt_Init() {
-    txt_scripts = (Txt_Script*)malloc(sizeof(Txt_Script));
+    txt_script = (Txt_Script*)malloc(sizeof(Txt_Script));
     current_txt_script_len = 0;
     current_txt_script_txtbox_ctr = 0; // Invalid txtbox_id
 }
@@ -83,10 +83,10 @@ void Txt_Add(u16 resourceId) {
 
     Data_DMAGetRes((void**)&script, &size, resourceId);
 
-    txt_scripts->txt_script = script;
-    txt_scripts->len = size;
+    txt_script->txt_script = script;
+    txt_script->len = size;
 
-    current_txt_script = resourceId;
+    current_txt_script_id = resourceId;
 }
 
 static inline void Txt_ReadUnsignedShort(char* buf, int pos, u16* value) {
@@ -323,12 +323,18 @@ int Txt_Play(u8* script) {
     return TXT_STATUS_END;
 }
 
+void Txt_Dt(){
+    free(txt_script);
+}
+
 void Txt_Start() {
     u8* script;
 
-    script = txt_scripts->txt_script;
-    current_txt_script_len = txt_scripts->len;
+    script = txt_script->txt_script;
+    current_txt_script_len = txt_script->len;
 
     while (Txt_Play(script) != TXT_STATUS_END)
         ;
+
+    Txt_Dt();
 }
