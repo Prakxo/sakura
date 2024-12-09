@@ -24,7 +24,8 @@ C_FILES += $(VNLIB_FILES)
 
 O_FILES := $(C_FILES:.c=.o)
 
-LIBS_FLAGS :=
+MINIAUDIO_FLAGS :=
+LZ4_FLAGS := 
 
 
 INCLUDE_CFLAGS = -I . -I example/include -I $(VNLIB)
@@ -33,13 +34,17 @@ CFLAGS:= -std=c99
 
 ifeq ($(NO64BIT), 1)
 CFLAGS += -m32
+MINIAUDIO_FLAGS += $(CFLAGS)
+LZ4_FLAGS += $(CFLAGS)
 endif
 
 ifeq ($(DEBUG),1)
-LIBS_FLAGS += -g
 CFLAGS += -DDEBUG -g
+MINIAUDIO_FLAGS += $(CFLAGS)
+LZ4_FLAGS += $(CFLAGS)
 else
 CFLAGS += -O
+LZ4_FLAGS += -O3
 endif
 
 ifeq ($(TARGET_PC), 1)
@@ -57,14 +62,16 @@ LDFLAGS := -Map $(NAME).map
 
 
 default:
-	$(CC) $(CFLAGS) $(C_FILES) -o $(OUTPUT) -Llib -l:miniaudio.a -lm -ldl -lpthread
+	$(CC) $(CFLAGS) $(C_FILES) -o $(OUTPUT) -Llib -l:miniaudio.a  -Llib -l:lz4.a -lm -ldl -lpthread
 
 dirs:
 	mkdir -p
 
 libs:
-	$(CC) $(LIBS_FLAGS) -c lib/miniaudio.c -o lib/miniaudio.o
+	$(CC) $(MINIAUDIO_FLAGS) -c lib/miniaudio.c -o lib/miniaudio.o
 	$(AR) cr lib/miniaudio.a ./lib/miniaudio.o
+	$(CC) $(LZ4_FLAGS) -c lib/lz4.c -o lib/lz4.o
+	$(AR) cr lib/lz4.a ./lib/lz4.o
 	
 strip:
 	$(shell strip $(OUTPUT)) 
