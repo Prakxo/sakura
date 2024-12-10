@@ -1,3 +1,5 @@
+#include "../../lib/lz4.h"
+#include "../../vnlib/__selftypes.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -287,28 +289,43 @@ char* process_script(const char* in, unsigned long* outsize){
     return out;
 }
 
-void make_script(const char* in, const char* out){
-    char* processed;
-    FILE* f = fopen(out, "wb");
+void make_script(const char* in, const char* out, int compress){
     unsigned long outsize;
+    FILE* f = fopen(out, "wb");
 
-    processed = process_script(in, &outsize);
+    if(compress == FALSE){
+        char* processed;
 
-    fwrite(processed, outsize, 1, f);
-    fclose(f);
+        processed = process_script(in, &outsize);
 
-    free(processed);
+        fwrite(processed, outsize, 1, f);
+        fclose(f);
+
+        free(processed);
+    }
+    else{
+        char* uncompressed = process_script(in, &outsize);
+        char* buf = (char*)malloc(outsize);
+        u32 postSize = LZ4_compress_default(uncompressed, buf, outsize, LZ4_compressBound(outsize));
+
+        fwrite(buf, postSize, 1, f);
+        fclose(f);
+
+        free(uncompressed);
+        free(buf);
+    }
 }
 
 
 void print_usage(const char* prgName){
-    printf("Usage : %s input_file output_file\n", prgName);
+    printf("Usage : %s input_file output_file [-c]\n", prgName);
 }
 
 int main (int argc, char** argv){
     int i;
     const char* inputFileName = NULL;
     const char* outputFileName = NULL;
+    unsigned int compress = FALSE;
 
     for (i = 1; i < argc; i++) {
         char* arg = argv[i];
@@ -319,8 +336,11 @@ int main (int argc, char** argv){
         else if (outputFileName == NULL){
             outputFileName = arg;
         }
+        else if(strcmp(arg, "-c") == 0){
+            compress = TRUE;
+        }
         else {
-            puts("too many files specified!");
+            puts("too many arguments specified!");
             print_usage(argv[0]);
             return 1;
         }
@@ -338,7 +358,7 @@ int main (int argc, char** argv){
     }
 
 
-    make_script(inputFileName, outputFileName);
+    make_script(inputFileName, outputFileName, compress);
 
     return 0;
 }

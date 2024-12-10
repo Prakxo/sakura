@@ -18,7 +18,7 @@ OUTPUT := mkscript
 C_FILES := main.c
 
 default:
-	$(CC) $(CFLAGS) $(C_FILES) -o $(OUTPUT)
+	$(CC) $(CFLAGS) $(C_FILES) -L../../lib -l:lz4.a -o $(OUTPUT)
 
 clean:
 	$(RM) $(OUTPUT)
