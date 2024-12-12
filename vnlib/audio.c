@@ -87,12 +87,12 @@ void Audio_Play() {
 }
 
 void Audio_LoadAudio(u8 type, u16 resourceId) {
-    u8* data;
+    u8* data = NULL;
     u8* buf;
     u32 size;
     int i = 0;
 
-    Data_DMAGetRes((void**)&data, NULL, resourceId);
+    //Data_DMAGetRes((void**)&data, NULL, resourceId);
 
     switch(type){
         case AUDIO_TYPE_BGM:

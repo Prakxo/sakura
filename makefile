@@ -39,7 +39,7 @@ LZ4_FLAGS += $(CFLAGS)
 endif
 
 ifeq ($(DEBUG),1)
-CFLAGS += -DDEBUG -g
+CFLAGS += -DDEBUG -g #-fsanitize=address
 MINIAUDIO_FLAGS += $(CFLAGS)
 LZ4_FLAGS += $(CFLAGS)
 else

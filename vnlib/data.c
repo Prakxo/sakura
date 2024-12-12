@@ -25,17 +25,21 @@ void Data_DMAGetRes(void** ptr, u32* size, u16 resourceId){
 
     if(data->compressed == TRUE){
         void* out;
-        u32 size = Data_DecompressData(&out, data->ptr, data->len);
+        u32 decompSize = Data_DecompressData(&out, data->ptr, data->len);
 
         #ifdef DEBUG
             {
                 char buf[20];
 
-                snprintf(buf, 20, "%ld size decomp", size);
+                snprintf(buf, 20, "%ld size decomp", decompSize);
 
                 puts(buf);
             }
         #endif
+
+        if(size != NULL){
+            *size = decompSize;
+        }
 
         *ptr = out;
     }
