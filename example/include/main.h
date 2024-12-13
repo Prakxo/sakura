@@ -4,6 +4,7 @@
 #include "selftypes.h"
 
 typedef enum Resource_DMA {
+    NULL_DATA,
     TXT_SCRIPT_TEST,
     TXT_SCRIPT_TEST_COMPRESSED,
     TEST_SCRIPT_0,

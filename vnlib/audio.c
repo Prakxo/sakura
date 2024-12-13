@@ -92,7 +92,7 @@ void Audio_LoadAudio(u8 type, u16 resourceId) {
     u32 size;
     int i = 0;
 
-    //Data_DMAGetRes((void**)&data, NULL, resourceId);
+    GET_DMA_RES((void**)&data, NULL, resourceId);
 
     switch(type){
         case AUDIO_TYPE_BGM:

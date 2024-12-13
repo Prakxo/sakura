@@ -81,7 +81,7 @@ void Txt_Add(u16 resourceId) {
     u8* script;
     u32 size;
 
-    Data_DMAGetRes((void**)&script, &size, resourceId);
+    GET_DMA_RES((void**)&script, &size, resourceId);
 
     txt_script->txt_script = script;
     txt_script->len = size;

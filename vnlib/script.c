@@ -14,7 +14,7 @@ void Script_Init(){
 }
 
 void Script_Add(u16 resourceId){
-    Data_DMAGetRes((void**)&currentScript, NULL, resourceId);
+    GET_DMA_RES((void**)&currentScript, NULL, resourceId);
 }
 
 void Script_Dt(){

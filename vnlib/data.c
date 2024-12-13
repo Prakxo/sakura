@@ -1,3 +1,4 @@
+#include "__macros.h"
 #include "data.h"
 #include "decompress.h"
 
@@ -6,8 +7,17 @@
 #include <stdio.h>
 #endif
 
+#ifndef DEBUG
 void Data_DMAGetRes(void** ptr, u32* size, u16 resourceId){
+#else
+void Data_DMAGetRes(void** ptr, u32* size, u16 resourceId, const char* file, u32 line){
+#endif
     Dmadata* data = &dmadata[resourceId];
+
+    if(data == NULL){
+        *ptr = NULL;
+        return;
+    }
 
     if(size != NULL){
         *size = data->len;
@@ -15,9 +25,9 @@ void Data_DMAGetRes(void** ptr, u32* size, u16 resourceId){
 
     #ifdef DEBUG
     {
-        char buf[20];
+        char buf[50];
 
-        snprintf(buf, 20, "%d compressed", data->compressed); 
+        snprintf(buf, ARRAY_COUNT(buf), "compressed %s @ %s L. %ld", data->compressed == TRUE ? "TRUE" : "FALSE", file, line); 
 
         puts(buf);
     }
@@ -31,7 +41,7 @@ void Data_DMAGetRes(void** ptr, u32* size, u16 resourceId){
             {
                 char buf[20];
 
-                snprintf(buf, 20, "%ld size decomp", decompSize);
+                snprintf(buf, ARRAY_COUNT(buf), "%ld size decomp", decompSize);
 
                 puts(buf);
             }

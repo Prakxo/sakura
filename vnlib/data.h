@@ -14,6 +14,14 @@ typedef struct dma_data_s{
 
 extern Dmadata dmadata[];
 
+#ifndef DEBUG
 extern void Data_DMAGetRes(void** ptr, u32* size, u16 resourceId);
+#define GET_DMA_RES(ptr, size, resourceId) \
+    Data_DMAGetRes(ptr, size, resourceId)
+#else
+extern void Data_DMAGetRes(void** ptr, u32* size, u16 resourceId, const char* file, u32 line);
+#define GET_DMA_RES(ptr, size, resourceId) \
+    Data_DMAGetRes(ptr, size, resourceId, __FILE__, __LINE__)
+#endif
 
 #endif
