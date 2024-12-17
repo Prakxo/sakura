@@ -1,5 +1,6 @@
 VN.elf
 tools/mkscript/mkscript
+tools/mkres/mkres
 
 lib/*.o
 lib/*.a
