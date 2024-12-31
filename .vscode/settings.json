@@ -1,12 +1,19 @@
 {
     "files.associations": {
         "script.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "gfx.h": "c",
+        "__selftypes.h": "c",
+        "macros.h": "c",
+        "gfx_pc.h": "c",
+        "*.bin": "c",
+        "vnlib.h": "c"
     },
     "clangd.fallbackFlags": [
         "-I${workspaceFolder}/example/include",
         "-DTARGET_PC",
         "-I${workspaceFolder}",
+        "-I${workspaceFolder}/vnlib",
     ]
     
 }

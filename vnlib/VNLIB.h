@@ -6,5 +6,7 @@
 #include "command.h"
 #include "txt.h"
 #include "data.h"
+#include "gfx.h"
+#include "bg.h"
 
 #endif

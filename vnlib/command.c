@@ -8,6 +8,7 @@
 
 #include "txt.h"
 #include "audio.h"
+#include "bg.h"
 
 void Command_Process(u32 command){
 
@@ -22,6 +23,8 @@ void Command_Process(u32 command){
         puts(buf);
         #endif
         #endif
+
+        Bg_Add(bgNo);
     }
 
     if(command & SK_COMMAND_BGM){

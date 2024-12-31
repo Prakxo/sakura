@@ -6,6 +6,9 @@
 #define ARRAY_COUNT(arr) (s32)(sizeof(arr) / sizeof(arr[0]))
 #define ARRAY_COUNTU(arr) (u32)(sizeof(arr) / sizeof(arr[0]))
 
+#define SCREEN_HEIGHT 640
+#define SCREEN_WIDTH 480
+
 #ifdef DEBUG
 #define ASSERT(expr)                                \
     (                                               \

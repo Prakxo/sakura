@@ -3,7 +3,7 @@ CC := $(BINUTILS_PREFIX)gcc
 
 DEBUG ?= 0
 
-CFLAGS := -std=c99 -Wall 
+CFLAGS := -std=c99 -Wall -m32
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -DDEBUG 

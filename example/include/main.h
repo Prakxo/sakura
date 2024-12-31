@@ -9,6 +9,7 @@ typedef enum Resource_DMA {
     TXT_SCRIPT_TEST_COMPRESSED,
     TEST_SCRIPT_0,
     TEST_SCRIPT_1,
+    BG_TEST,
     RESOURCE_DMA_NUM,
 } Resource_DMA;
 
