@@ -83,10 +83,21 @@ void Txt_Add(u16 resourceId) {
 
     GET_DMA_RES((void**)&script, &size, resourceId);
 
-    txt_script->txt_script = script;
-    txt_script->len = size;
 
-    current_txt_script_id = resourceId;
+    if(script != NULL){
+        txt_script->txt_script = script;
+        txt_script->len = size;
+
+        current_txt_script_id = resourceId;
+    }
+    else{
+        #ifdef TARGET_PC
+        #ifdef DEBUG
+        puts("DMA DATA is NULL\tNot Loading!!");
+        #endif
+        #endif
+    }
+
 }
 
 static inline void Txt_ReadUnsignedShort(char* buf, int pos, u16* value) {
@@ -330,11 +341,14 @@ void Txt_Dt(){
 void Txt_Start() {
     u8* script;
 
+
     script = txt_script->txt_script;
     current_txt_script_len = txt_script->len;
 
-    while (Txt_Play(script) != TXT_STATUS_END)
-        ;
+    if(script != NULL){
+        while (Txt_Play(script) != TXT_STATUS_END)
+            ;
 
-    Txt_Dt();
+        Txt_Dt();
+    }
 }

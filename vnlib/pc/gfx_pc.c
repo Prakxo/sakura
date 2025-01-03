@@ -1,5 +1,7 @@
 #include "gfx_pc.h"
 #include "gfx.h"
+#include "script.h"
+#include "bg.h"
 #include "vnlib/data.h"
 #include "__macros.h"
 #include "lib/stb_image.h"
@@ -13,8 +15,11 @@ static u8* __load_image(u8* src, u32 len){
     int x;
     int y;
     int ch;
+    u8* data = stbi_load_from_memory(src, len, &x, &y, &ch, 4);
 
-    return stbi_load_from_memory(src, len, &x, &y, &ch, 4);
+    ASSERT(data == NULL);
+
+    return data;
 }
 
 
@@ -31,24 +36,29 @@ u8* load_image(u16 resourceId, u32* size){
     return __load_image(data, len);
 }   
 
-void render_bg(){
-    SDL_Texture* bgTex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, SCREEN_HEIGHT, SCREEN_WIDTH);
+SDL_Texture* bgTex;
 
-    if(bgTex == NULL){
-        puts("bgTex null!");
-        return;
+void render_bg(BOOL updated) {
+
+  if (bgChanged == TRUE) {
+    bgTex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32,
+                              SDL_TEXTUREACCESS_STATIC, SCREEN_HEIGHT,
+                              SCREEN_WIDTH);
+
+    if (bgTex == NULL) {
+      free(bgTex);
+      puts("bgTex null!");
+      return;
     }
-
 
     {
-        s32 err = SDL_UpdateTexture(bgTex, NULL, bgBuffer, SCREEN_WIDTH * 4);
+      s32 err = SDL_UpdateTexture(bgTex, NULL, bgBuffer, SCREEN_WIDTH * 4);
 
-        err != 0 ? puts(SDL_GetError()) : 0;
+      err != 0 ? puts(SDL_GetError()) : 0;
     }
+  }
 
-
-    SDL_RenderCopy(renderer, bgTex, NULL,NULL);
-
+  SDL_RenderCopy(renderer, bgTex, NULL, NULL);
 }
 
 void Graph_Init(){
@@ -58,6 +68,7 @@ void Graph_Init(){
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_CreateWindowAndRenderer(SCREEN_HEIGHT,SCREEN_WIDTH, 0, &window, &renderer);
+
 
     while(exit){
         while(SDL_PollEvent(&e)){
@@ -72,9 +83,11 @@ void Graph_Init(){
 
         SDL_RenderClear(renderer);
 
-        render_bg();
+        render_bg(bgChanged);
 
         SDL_RenderPresent(renderer);
 
     }
+
+    SDL_Quit();
 }

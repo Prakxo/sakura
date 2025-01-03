@@ -7,7 +7,13 @@
         "macros.h": "c",
         "gfx_pc.h": "c",
         "*.bin": "c",
-        "vnlib.h": "c"
+        "vnlib.h": "c",
+        "streambuf": "c",
+        "bg.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "data.h": "c"
     },
     "clangd.fallbackFlags": [
         "-I${workspaceFolder}/example/include",

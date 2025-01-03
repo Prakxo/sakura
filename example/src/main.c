@@ -1,7 +1,9 @@
 #include "example/include/main.h"
 #include "example/include/macros.h"
 
+#include "gfx_pc.h"
 #include "vnlib/VNLIB.h"
+#include <pthread.h>
 
 #ifdef TARGET_PC
 #include <stdio.h> 
@@ -15,6 +17,11 @@ BOOL debug = TRUE;
 BOOL debug = FALSE;
 #endif
 
+int engine_proc(void* arg){
+    Script_Start();
+
+    return 0;
+}
 
 int main(int argc, char** argv){
 
@@ -27,25 +34,11 @@ int main(int argc, char** argv){
     Gfx_Init();
     Txt_Init();
     Script_Init();
-
-    #ifdef TARGET_PC
-    {
-        pid_t pid = fork();
-
-    if(pid == 0){
-        Graph_Init();
-    }
-    else{
-    #endif
-
+    
     Script_Add(TEST_SCRIPT_1);
 
-    Script_Start();
+    engine_proc(NULL);
 
-    #ifdef TARGET_PC
-    }
+    Graph_Init();
 
-        kill(pid, 9);
-    }
-    #endif
 }

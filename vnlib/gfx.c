@@ -6,7 +6,7 @@
 #include <stdio.h>
 #endif
 
-u8 bgBuffer[SCREEN_HEIGHT * SCREEN_HEIGHT];
+u8 bgBuffer[SCREEN_HEIGHT * SCREEN_WIDTH * 4];
 
 void Gfx_Init(){
     memset(bgBuffer, 1, sizeof(bgBuffer));

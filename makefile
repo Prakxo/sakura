@@ -50,21 +50,20 @@ CFLAGS += -DDEBUG -g #-fsanitize=address
 MINIAUDIO_FLAGS += $(CFLAGS)
 LZ4_FLAGS += $(CFLAGS)
 STB_IMAGE_FLAGS += $(CFLAGS)
+LIBS += -Llib -l:miniaudio.a  -Llib -l:lz4.a -lm -ldl -lpthread -l:stb_image.a -lSDL2 -lm -lasound -lm -ldl -lpthread -lpulse-simple -pthread \
+-lpulse -pthread -lX11 -lXext -lXcursor -lXinerama -lXi -lXfixes -lXrandr -lXss -lXxf86vm -ldrm -lgbm -lwayland-egl -lwayland-client \
+-lwayland-cursor -lxkbcommon -ldecor-0 -lpthread -lrt
 else
 CFLAGS += -O
 LZ4_FLAGS += -O3
 STB_IMAGE_FLAGS += -O3
+LIBS += -Llib -l:miniaudio.a  -Llib -l:lz4.a -lm -ldl -lpthread -l:stb_image.a -lSDL2
 endif
 
 ifeq ($(TARGET_PC), 1)
 CFLAGS += -DTARGET_PC -D_XOPEN_SOURCE=600 -I/usr/include/SDL2 -D_REENTRANT
-ifeq ($(DEBUG),1)
-LIBS += -Llib -l:miniaudio.a  -Llib -l:lz4.a -lm -ldl -lpthread -l:stb_image.a -lSDL2
 endif
-LIBS += -Llib -l:miniaudio.a  -Llib -l:lz4.a -lm -ldl -lpthread -l:stb_image.a -lSDL2 -lm -lasound -lm -ldl -lpthread -lpulse-simple -pthread \
--lpulse -pthread -lX11 -lXext -lXcursor -lXinerama -lXi -lXfixes -lXrandr -lXss -lXxf86vm -ldrm -lgbm -lwayland-egl -lwayland-client \
--lwayland-cursor -lxkbcommon -ldecor-0 -lpthread -lrt
-endif
+
 
 CFLAGS += $(INCLUDE_CFLAGS)
 
